@@ -4,7 +4,8 @@
 git add .
 
 # Commit with the message you provide when running the script
-git commit -m "$1"
+# Instead of just git commit, use:
+git commit -m "Automated update via script"
 
 # Push to GitHub
 git push

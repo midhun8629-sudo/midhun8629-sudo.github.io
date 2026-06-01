@@ -1,48 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galerkin | Materials Informatics & Simulation</title>
-
-    <title>GALERKIN: Learning Architectures for Computational Engineering</title>
+    <title>Galerkin Systems | Advanced Materials Informatics</title>
     <style>
-        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
-        header { background: #002d72; color: #fff; padding: 2rem; text-align: center; }
-        section { padding: 2rem; max-width: 800px; margin: auto; }
-        .contact-box { background: #f4f4f4; padding: 1.5rem; border-left: 5px solid #002d72; }
-        h2 { color: #002d72; }
-        footer { text-align: center; padding: 1rem; font-size: 0.9rem; color: #777; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; color: #333; }
+        .hero { 
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('cover-image.jpg'); 
+            background-size: cover; height: 60vh; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; color: white; text-align: center; 
+        }
+        .nav-buttons { margin-top: 20px; }
+        .btn { 
+            padding: 12px 24px; margin: 5px; text-decoration: none; border-radius: 4px; 
+            font-weight: bold; display: inline-block; transition: background 0.3s;
+        }
+        .btn-primary { background: #002d72; color: white; }
+        .btn-secondary { background: #555; color: white; }
+        .btn:hover { background: #0056b3; }
+        section { padding: 40px; text-align: center; }
     </style>
 </head>
 <body>
 
-
-<header>
-    <h1>GALERKIN</h1>
-    
-</header>
-
-<section>
-    
-
-    <div class="contact-box">
-        <h2>Contact Us</h2>
-        <p>For research collaborations or technical enquiries, please reach out to our team:</p>
-        <p><strong>Midhun Mohanan:</strong> <a href="mailto:midhun@galerkin.de">midhun@galerkin.de</a></p>
-        <p><strong>Jivko Katzarov:</strong> <a href="mailto:jivko@galerkin.de">jivko@galerkin.de</a></p>
+<div class="hero">
+    <h1>Galerkin Systems</h1>
+    <p>Predictive Low-Order Accelerated Computational Engineering</p>
+    <div class="nav-buttons">
+        <a href="#industries" class="btn btn-primary">Industries & Services</a>
+        <a href="#contact" class="btn btn-secondary">Contact Us</a>
+        <a href="#partner" class="btn btn-secondary">Become a Partner</a>
     </div>
+</div>
+
+<section id="industries">
+    <h2>Our Industrial Focus</h2>
+    <p>Applying physics-informed neural networks and model order reduction to automotive, semiconductor, and energy sectors.</p>
 </section>
 
-<footer>
-    &copy; 2026 Galerkin. Based in Kiel, Germany.
-</footer>
+<section id="contact">
+    <h2>Contact Us</h2>
+    <p>Reach out for technical collaborations:</p>
+    <p>Midhun M M: <a href="mailto:midhun@galerkin.de">midhun@galerkin.de</a></p>
+    <p>Jivko Katzarov: <a href="mailto:jivko@galerkin.de">jivko@galerkin.de</a></p>
+</section>
 
-=======
-    <h1>Galerkin</h1>
-    <p class="tagline">Learning Architectures for Predictive Low-Order Accelerated Computational Engineering.</p>
-    <p>High-fidelity simulation at the speed of thought. Contact us for pilot deployments.</p>
->>>>>>> 125e357e1f50f042f32100194497ddc40e53076c
 </body>
 </html>

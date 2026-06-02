@@ -30,7 +30,7 @@
             justify-content: space-between; 
             padding: 1.5rem 6%; 
             align-items: center; 
-            z-index: 2000;
+            z-index: 2000; 
             background: transparent; 
             border-bottom: 1px solid transparent;
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
@@ -79,70 +79,66 @@
         }
         .lang-select strong { font-weight: 600; }
 
-        /* --- Full Screen Hero Section --- */
-        .hero { 
-            position: relative;
-            height: 100vh; 
+        /* --- 1. Full Screen Image Section --- */
+        .hero-visual {
+            height: 100vh; /* Takes up the exact full height of the user's screen */
             width: 100%;
-            display: flex; 
-            align-items: flex-end; /* Aligns content wrapper to bottom area */
-            justify-content: flex-start;
-            padding: 0 6% 8vh 6%; /* Bottom padding keeps layout anchored below fold line */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
             background-color: #ffffff;
         }
 
-        .hero-bg-image {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .hero-visual img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: 1; 
-            opacity: 1; 
             will-change: opacity;
         }
 
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.4) 40%, rgba(255,255,255,0) 100%);
-            z-index: 2;
+        /* --- 2. Tagline Text Section (Positioned safely below the image) --- */
+        .hero-text-section {
+            padding: 8rem 6% 4rem 6%;
+            background-color: #ffffff;
         }
 
-        /* Text positioning targeted exactly underneath the fold line on scroll initialization */
-        .hero-text { 
-            max-width: 50%;
-            z-index: 10;
-            opacity: 0; 
-            transform: translateY(60px); /* Positioned lower to roll up naturally */
-            will-change: opacity, transform;
-        }
-
-        .hero-text h1 { 
+        .hero-text-section h1 { 
             font-size: 4.2rem; 
             line-height: 1.1; 
             margin-bottom: 2rem; 
             letter-spacing: -1.5px; 
             font-weight: 600;
+            max-width: 900px;
+            /* Initial state for scroll animation */
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
         } 
-        .hero-text p { 
+        
+        .hero-text-section p { 
             font-size: 1.25rem; 
             color: #333; 
-            max-width: 90%; 
+            max-width: 800px; 
             margin-bottom: 2.5rem; 
             font-weight: 400; 
+            /* Initial state for scroll animation */
+            opacity: 0;
+            transform: translateY(40px);
+            /* Adds a slight delay so the paragraph fades in just after the heading */
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1) 0.15s, transform 1s cubic-bezier(0.25, 1, 0.5, 1) 0.15s;
         }
 
-        /* --- Industries Split Section --- */
+        /* Class added by Javascript when scrolled into view */
+        .hero-text-section.visible h1,
+        .hero-text-section.visible p {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- 3. Industries Split Section --- */
         .industries-section {
-            position: relative;
-            z-index: 15; 
-            padding: 8rem 6%;
+            padding: 6rem 6% 8rem 6%;
             background-color: #ffffff;
         }
 
@@ -159,83 +155,39 @@
             gap: 5%;
         }
 
-        .industries-list {
-            width: 38%;
-            display: flex;
-            flex-direction: column;
-        }
+        .industries-list { width: 38%; display: flex; flex-direction: column; }
 
         .industry-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 0.5rem;
-            border-bottom: 1px solid #e0e0e0;
-            cursor: pointer;
-            color: #555;
-            font-size: 1.2rem;
-            font-weight: 400;
-            transition: all 0.3s ease;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 0.5rem; border-bottom: 1px solid #e0e0e0;
+            cursor: pointer; color: #555; font-size: 1.2rem; font-weight: 400; transition: all 0.3s ease;
         }
 
         .industry-item .num { font-size: 1rem; opacity: 0.7; }
-
         .industry-item.active {
-            background-color: #00363a; 
-            color: #ffffff;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-            border-bottom-color: transparent;
+            background-color: #00363a; color: #ffffff;
+            padding-left: 1.5rem; padding-right: 1.5rem; border-bottom-color: transparent;
         }
 
         .industries-details { width: 57%; }
 
         .details-graphic {
-            width: 100%;
-            height: 380px;
-            background-color: #f7f7f7;
-            margin-bottom: 2.5rem;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 100%; height: 380px; background-color: #f7f7f7;
+            margin-bottom: 2.5rem; overflow: hidden; display: flex; align-items: center; justify-content: center;
         }
+        .details-graphic img { width: 100%; height: 100%; object-fit: cover; }
 
-        .details-graphic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .details-content h3 {
-            font-size: 2.4rem;
-            margin: 0 0 1.5rem 0;
-            letter-spacing: -0.5px;
-            font-weight: 500;
-        }
-
-        .details-content p {
-            font-size: 1.2rem;
-            color: #444;
-            font-weight: 300;
-            margin: 0;
-        }
+        .details-content h3 { font-size: 2.4rem; margin: 0 0 1.5rem 0; letter-spacing: -0.5px; font-weight: 500; }
+        .details-content p { font-size: 1.2rem; color: #444; font-weight: 300; margin: 0; }
 
         .btn-action {
-            display: inline-block;
-            margin-top: 2.5rem;
-            padding: 1rem 2rem;
-            background-color: #00363a;
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            border-radius: 30px;
-            transition: opacity 0.2s;
+            display: inline-block; margin-top: 2.5rem; padding: 1rem 2rem;
+            background-color: #00363a; color: white; text-decoration: none; font-weight: 500;
+            border-radius: 30px; transition: opacity 0.2s;
         }
         .btn-action:hover { opacity: 0.9; }
 
         @media (max-width: 992px) {
-            .hero-text { max-width: 100%; }
             .split-container { flex-direction: column; }
             .industries-list, .industries-details { width: 100%; }
             .industries-details { margin-top: 4rem; }
@@ -257,15 +209,14 @@
     </div>
 </nav>
 
-<header class="hero">
-    <img src="image.png" alt="Computational Architecture Workflow" class="hero-bg-image" id="hero-img">
-    <div class="hero-overlay"></div>
-    
-    <div class="hero-text" id="hero-text">
-        <h1>Learning Architectures for Computational Engineering.</h1>
-        <p>Galerkin Systems bridges the gap between high-fidelity simulation and real-time performance. We empower engineering teams to unlock computational speed through physics-informed intelligence.</p>
-    </div>
+<header class="hero-visual">
+    <img src="image.png" alt="Computational Architecture Workflow" id="hero-img">
 </header>
+
+<section class="hero-text-section" id="hero-text-section">
+    <h1>Learning Architectures for Computational Engineering.</h1>
+    <p>Galerkin Systems bridges the gap between high-fidelity simulation and real-time performance. We empower engineering teams to unlock computational speed through physics-informed intelligence.</p>
+</section>
 
 <section id="industries" class="industries-section">
     <h2>Our Industries</h2>
@@ -306,33 +257,40 @@
 <script>
     const navbar = document.getElementById('navbar');
     const heroImg = document.getElementById('hero-img');
-    const heroText = document.getElementById('hero-text');
+    const textSection = document.getElementById('hero-text-section');
     
-    // Smooth transition windows
-    const fadeScrollDistance = 500; 
-    
+    // --- 1. Scroll Logic for Toolbar & Image Fade Out ---
     window.addEventListener('scroll', () => {
         let scrollY = window.scrollY;
         
+        // Toolbar class toggle
         if (scrollY > 50) {
             navbar.classList.add('scrolled');
         } else {
             navbar.classList.remove('scrolled');
         }
         
-        let scrollFraction = Math.min(scrollY / fadeScrollDistance, 1);
-        
+        // Fade out the hero image over the first 500px of scrolling
         if (heroImg) {
-            heroImg.style.opacity = 1 - scrollFraction;
-        }
-        
-        if (heroText) {
-            heroText.style.opacity = scrollFraction;
-            // Moves up from 60px down to 0px smoothly as the user rolls down the screen area
-            heroText.style.transform = `translateY(${60 - (60 * scrollFraction)}px)`;
+            heroImg.style.opacity = Math.max(1 - (scrollY / 500), 0);
         }
     });
 
+    // --- 2. Intersection Observer for Text Fade In ---
+    // This watches the text section. As soon as 20% of it enters the screen from the bottom, it triggers the fade-in.
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    if (textSection) {
+        observer.observe(textSection);
+    }
+
+    // --- 3. Industry Switcher Logic ---
     const industryData = [
         {
             title: "Automotive & Aerospace",

@@ -30,7 +30,7 @@
             justify-content: space-between; 
             padding: 1.5rem 6%; 
             align-items: center; 
-            z-index: 2000; /* High z-index ensures it sits safely above ALL scrolling content */
+            z-index: 2000;
             background: transparent; 
             border-bottom: 1px solid transparent;
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
@@ -85,11 +85,11 @@
             height: 100vh; 
             width: 100%;
             display: flex; 
-            align-items: center; 
+            align-items: flex-end; /* Aligns content wrapper to bottom area */
             justify-content: flex-start;
-            padding: 0 6%; 
+            padding: 0 6% 8vh 6%; /* Bottom padding keeps layout anchored below fold line */
             overflow: hidden;
-            background-color: #ffffff; /* Gives a solid background for masking layers underneath the toolbar */
+            background-color: #ffffff;
         }
 
         .hero-bg-image {
@@ -99,7 +99,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: 1; /* Kept basic background layers ordered underneath layout frames */
+            z-index: 1; 
             opacity: 1; 
             will-change: opacity;
         }
@@ -110,15 +110,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+            background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.4) 40%, rgba(255,255,255,0) 100%);
             z-index: 2;
         }
 
+        /* Text positioning targeted exactly underneath the fold line on scroll initialization */
         .hero-text { 
-            max-width: 45%;
-            z-index: 10; /* Ensures content rolls behind navbar seamlessly without overlay clipping */
+            max-width: 50%;
+            z-index: 10;
             opacity: 0; 
-            transform: translateY(20px);
+            transform: translateY(60px); /* Positioned lower to roll up naturally */
             will-change: opacity, transform;
         }
 
@@ -140,7 +141,7 @@
         /* --- Industries Split Section --- */
         .industries-section {
             position: relative;
-            z-index: 15; /* Sits higher than background layers to cleanly mask them */
+            z-index: 15; 
             padding: 8rem 6%;
             background-color: #ffffff;
         }
@@ -235,7 +236,6 @@
 
         @media (max-width: 992px) {
             .hero-text { max-width: 100%; }
-            .hero-overlay { background: rgba(255,255,255,0.85); }
             .split-container { flex-direction: column; }
             .industries-list, .industries-details { width: 100%; }
             .industries-details { margin-top: 4rem; }
@@ -308,7 +308,8 @@
     const heroImg = document.getElementById('hero-img');
     const heroText = document.getElementById('hero-text');
     
-    const fadeScrollDistance = 400; 
+    // Smooth transition windows
+    const fadeScrollDistance = 500; 
     
     window.addEventListener('scroll', () => {
         let scrollY = window.scrollY;
@@ -327,8 +328,8 @@
         
         if (heroText) {
             heroText.style.opacity = scrollFraction;
-            // The text moves from 20px up down to 0px, rolling out below the viewport window cleanly
-            heroText.style.transform = `translateY(${20 - (20 * scrollFraction)}px)`;
+            // Moves up from 60px down to 0px smoothly as the user rolls down the screen area
+            heroText.style.transform = `translateY(${60 - (60 * scrollFraction)}px)`;
         }
     });
 

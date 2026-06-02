@@ -20,7 +20,7 @@
             -webkit-font-smoothing: antialiased;
         }
         
-        /* --- Dynamic Static Toolbar --- */
+        /* --- Fixed Navigation Toolbar --- */
         nav { 
             position: fixed;
             top: 0; 
@@ -30,7 +30,7 @@
             justify-content: space-between; 
             padding: 1.5rem 6%; 
             align-items: center; 
-            z-index: 1000;
+            z-index: 2000; /* High z-index ensures it sits safely above ALL scrolling content */
             background: transparent; 
             border-bottom: 1px solid transparent;
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
@@ -61,7 +61,6 @@
             align-items: center;
         }
 
-        /* Decreased font-size for toolbar text */
         .nav-links a { 
             margin-left: 32px; 
             text-decoration: none; 
@@ -72,7 +71,6 @@
         }
         .nav-links a:hover { color: #666; }
         
-        /* Decreased font-size for language selector */
         .lang-select { 
             font-size: 0.85rem; 
             color: #1a1a1a; 
@@ -91,6 +89,7 @@
             justify-content: flex-start;
             padding: 0 6%; 
             overflow: hidden;
+            background-color: #ffffff; /* Gives a solid background for masking layers underneath the toolbar */
         }
 
         .hero-bg-image {
@@ -100,8 +99,8 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: -2;
-            opacity: 1; /* Controlled by JS on scroll */
+            z-index: 1; /* Kept basic background layers ordered underneath layout frames */
+            opacity: 1; 
             will-change: opacity;
         }
 
@@ -112,13 +111,13 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
-            z-index: -1;
+            z-index: 2;
         }
 
         .hero-text { 
             max-width: 45%;
-            z-index: 1; 
-            opacity: 0; /* Starts hidden, fades in on scroll */
+            z-index: 10; /* Ensures content rolls behind navbar seamlessly without overlay clipping */
+            opacity: 0; 
             transform: translateY(20px);
             will-change: opacity, transform;
         }
@@ -140,6 +139,8 @@
 
         /* --- Industries Split Section --- */
         .industries-section {
+            position: relative;
+            z-index: 15; /* Sits higher than background layers to cleanly mask them */
             padding: 8rem 6%;
             background-color: #ffffff;
         }
@@ -307,36 +308,30 @@
     const heroImg = document.getElementById('hero-img');
     const heroText = document.getElementById('hero-text');
     
-    // The amount of pixels the user needs to scroll for the full crossfade effect
     const fadeScrollDistance = 400; 
     
     window.addEventListener('scroll', () => {
         let scrollY = window.scrollY;
         
-        // 1. Toolbar state logic
         if (scrollY > 50) {
             navbar.classList.add('scrolled');
         } else {
-            navbar.classList.removeClass('scrolled');
+            navbar.classList.remove('scrolled');
         }
         
-        // 2. Scroll-driven crossfade logic
-        // Calculate a fraction from 0 to 1 based on scroll position
         let scrollFraction = Math.min(scrollY / fadeScrollDistance, 1);
         
-        // As you scroll down, image opacity goes from 1 to 0
         if (heroImg) {
             heroImg.style.opacity = 1 - scrollFraction;
         }
         
-        // As you scroll down, text opacity goes from 0 to 1, and translates up into place
         if (heroText) {
             heroText.style.opacity = scrollFraction;
+            // The text moves from 20px up down to 0px, rolling out below the viewport window cleanly
             heroText.style.transform = `translateY(${20 - (20 * scrollFraction)}px)`;
         }
     });
 
-    // Industry Switcher Logic
     const industryData = [
         {
             title: "Automotive & Aerospace",

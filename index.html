@@ -10,39 +10,56 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
+        /* --- GLOBAL RESET & TYPOGRAPHY --- */
+        /* Forces padding and borders to be included in the element's total width/height */
         * { box-sizing: border-box; }
+        
         body { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
             margin: 0; 
             color: #1a1a1a; 
             line-height: 1.6;
             background-color: #ffffff;
+            /* Makes text rendering sharper on macOS/iOS devices */
             -webkit-font-smoothing: antialiased;
         }
         
-        /* --- Dynamic Transforming Logo --- */
+        /* --- 1. DYNAMIC TRANSFORMING LOGO --- */
+        /* This logo sits outside the normal page layout so it can float anywhere */
         .dynamic-logo {
             position: fixed;
-            /* Start huge and centered */
+            
+            /* Centers the logo perfectly in the middle of the screen initially */
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            
+            /* Sets the initial giant size */
             width: 80vw;
             max-width: 700px;
-            z-index: 2005; /* High z-index to stay above everything */
-            pointer-events: none; /* Let clicks pass through the big logo */
+            
+            /* High z-index ensures it sits above text and images */
+            z-index: 2005; 
+            
+            /* CRITICAL: Prevents the invisible box around the giant logo from blocking 
+               the user from clicking links or text underneath it */
+            pointer-events: none; 
+            
+            /* Smoothly animates any changes to size, position, or transform over 0.7 seconds */
             transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* Scrolled state: Moves to the top left and shrinks to fit the toolbar */
+        /* * When JavaScript adds the 'scrolled' class to the <body>, these rules override the ones above.
+         * The logo moves to the top left and shrinks. 
+         */
         body.scrolled .dynamic-logo {
-            top: 0.5rem; /* Matches the scrolled navbar padding-top */
-            left: 6%;    /* Matches the navbar left padding */
-            transform: translate(0, 0);
-            width:75px; /* Final logo size in the toolbar */
+            top: 0.5rem; /* Aligns vertically with the scrolled navbar */
+            left: 6%;    /* Aligns horizontally with the navbar padding */
+            transform: translate(0, 0); /* Removes the center-alignment offset */
+            width: 35px; /* Shrinks to icon size */
         }
 
-        /* --- Fixed Navigation Toolbar --- */
+        /* --- 2. FIXED NAVIGATION TOOLBAR --- */
         nav { 
             position: fixed;
             top: 0; 
@@ -52,14 +69,17 @@
             justify-content: space-between; 
             padding: 1.5rem 6%; 
             align-items: center; 
-            z-index: 2000; 
-            background: #ffffff; /* Solid background so text is readable over the scrolling content */
+            z-index: 2000; /* Sits just below the dynamic logo (2005) */
+            
+            /* Starts with a solid white background to cover content scrolling underneath it */
+            background: #ffffff; 
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
         
-        /* Triggers when scrolling down */
+        /* Toolbar styling when the user scrolls down */
         body.scrolled nav {
-            padding: 0.5rem 6%; /* Shrinks padding */
+            padding: 0.5rem 6%; /* Thinner padding */
+            /* Semi-transparent white background with a blur effect (frosted glass) */
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -67,12 +87,16 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.03);
         }
 
-        /* Invisible spacer to maintain flexbox layout while the real logo floats */
+        /* * Because the actual logo is floating ('position: fixed'), the navbar doesn't 
+         * know it exists. This invisible spacer takes up the exact size of the final logo 
+         * to prevent the navigation links from snapping to the far left of the screen.
+         */
         .logo-spacer {
             width: 35px;
             height: 35px;
         }
 
+        /* Flexbox aligns the links in a row and centers them vertically */
         .nav-links {
             display: flex;
             align-items: center;
@@ -86,6 +110,7 @@
             font-size: 0.85rem; 
             transition: color 0.2s ease; 
         }
+        
         .nav-links a:hover { color: #666; }
         
         .lang-select { 
@@ -96,18 +121,22 @@
         }
         .lang-select strong { font-weight: 600; }
 
-        /* --- 1. Full Screen Spacer (Pushes text down to the next scroll block) --- */
+        /* --- 3. PAGE STRUCTURE & ANIMATIONS --- */
+        
+        /* Forces the user to scroll down exactly one full screen height (100vh) 
+           before they see the text. This gives the giant logo an empty canvas. */
         .hero-visual-space {
-            height: 100vh; 
+            height: 10vh; 
             width: 100%;
         }
 
-        /* --- 2. Tagline Text Section --- */
+        /* The container for your main tagline */
         .hero-text-section {
             padding: 8rem 6% 4rem 6%;
             background-color: #ffffff;
         }
 
+        /* Initial hidden state for the scroll animation */
         .hero-text-section h1 { 
             font-size: 4.2rem; 
             line-height: 1.1; 
@@ -115,6 +144,8 @@
             letter-spacing: -1.5px; 
             font-weight: 600;
             max-width: 900px;
+            
+            /* Starts completely transparent and pushed 40px down */
             opacity: 0;
             transform: translateY(40px);
             transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
@@ -126,18 +157,21 @@
             max-width: 800px; 
             margin-bottom: 2.5rem; 
             font-weight: 400; 
+            
             opacity: 0;
             transform: translateY(40px);
+            /* The '0.15s' at the end is a delay. The paragraph fades in slightly AFTER the heading. */
             transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1) 0.15s, transform 1s cubic-bezier(0.25, 1, 0.5, 1) 0.15s;
         }
 
+        /* When JS adds the 'visible' class, opacity becomes 1 and it moves to its normal position (0) */
         .hero-text-section.visible h1,
         .hero-text-section.visible p {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* --- 3. Industries Split Section --- */
+        /* --- 4. INDUSTRIES INTERACTIVE SECTION --- */
         .industries-section {
             padding: 6rem 6% 8rem 6%;
             background-color: #ffffff;
@@ -150,45 +184,71 @@
             font-weight: 600;
         }
 
+        /* Uses flexbox to sit the clickable list (left) and the text details (right) side-by-side */
         .split-container {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: flex-start; /* Ensures both columns start at the exact same height */
             gap: 5%;
         }
 
-        .industries-list { width: 38%; display: flex; flex-direction: column; }
+        /* Left Column: 38% width */
+        .industries-list { 
+            width: 38%; 
+            display: flex; 
+            flex-direction: column; 
+        }
 
+        /* Individual list items */
         .industry-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1.5rem 1rem; border-bottom: 1px solid #e0e0e0;
-            cursor: pointer; color: #555; font-size: 1.2rem; font-weight: 400; transition: all 0.3s ease;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 1.5rem 1rem; 
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer; /* Changes mouse to a clicking hand */
+            color: #555; 
+            font-size: 1.2rem; 
+            font-weight: 400; 
+            transition: all 0.3s ease;
         }
 
         .industry-item .num { font-size: 1rem; opacity: 0.7; }
+        
+        /* The styling applied to the currently selected industry */
         .industry-item.active {
-            background-color: #00363a; color: #ffffff;
+            background-color: #00363a; 
+            color: #ffffff;
             border-bottom-color: transparent;
         }
 
+        /* Right Column: 57% width */
         .industries-details { 
             width: 57%; 
-            padding-top: 1.5rem; 
+            padding-top: 1.5rem; /* Pushes the text down to align with the first list item's padding */
         }
 
         .details-content h3 { font-size: 2.4rem; margin: 0 0 1.5rem 0; letter-spacing: -0.5px; font-weight: 500; }
         .details-content p { font-size: 1.2rem; color: #444; font-weight: 300; margin: 0; line-height: 1.6; }
 
         .btn-action {
-            display: inline-block; margin-top: 2.5rem; padding: 1rem 2rem;
-            background-color: #00363a; color: white; text-decoration: none; font-weight: 500;
-            border-radius: 30px; transition: opacity 0.2s;
+            display: inline-block; 
+            margin-top: 2.5rem; 
+            padding: 1rem 2rem;
+            background-color: #00363a; 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 500;
+            border-radius: 30px; 
+            transition: opacity 0.2s;
         }
         .btn-action:hover { opacity: 0.9; }
 
+        /* --- 5. RESPONSIVE DESIGN (MOBILE/TABLET) --- */
+        /* These rules apply only when the screen is smaller than 992px wide */
         @media (max-width: 992px) {
-            .dynamic-logo { width: 90vw; }
-            .split-container { flex-direction: column; }
+            .dynamic-logo { width: 90vw; } /* Logo takes up more space on mobile */
+            .split-container { flex-direction: column; } /* Stacks the columns vertically */
             .industries-list, .industries-details { width: 100%; }
             .industries-details { padding-top: 2rem; margin-top: 1rem; }
         }
@@ -251,31 +311,51 @@
 </section>
 
 <script>
-    // --- 1. Scroll Logic for Logo Transformation & Toolbar ---
+    // ==========================================
+    // 1. SCROLL LOGIC (Logo Transformation & Toolbar)
+    // ==========================================
+    // This listens for any scroll movement in the browser window.
     window.addEventListener('scroll', () => {
-        // As soon as the user scrolls down 50 pixels, trigger the transformation
+        // If the user has scrolled more than 50 pixels down from the absolute top...
         if (window.scrollY > 50) {
+            // Add the class 'scrolled' to the <body> tag.
+            // This triggers the CSS rules (e.g., body.scrolled .dynamic-logo)
             document.body.classList.add('scrolled');
         } else {
+            // Remove the class when they scroll back to the very top.
             document.body.classList.remove('scrolled');
         }
     });
 
-    // --- 2. Intersection Observer for Text Fade In ---
+    // ==========================================
+    // 2. INTERSECTION OBSERVER (Fade-In Text)
+    // ==========================================
+    // This creates a tool that watches when elements enter the screen.
     const textSection = document.getElementById('hero-text-section');
+    
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
+            // 'isIntersecting' is true when the element becomes visible
             if (entry.isIntersecting) {
+                // Add the 'visible' class to trigger the CSS opacity/transform transition
                 entry.target.classList.add('visible');
             }
         });
-    }, { threshold: 0.2 });
+    }, { 
+        // threshold: 0.2 means the animation only triggers when at least 
+        // 20% of the text section is visible on the screen.
+        threshold: 0.2 
+    });
 
+    // Tell the observer to start watching our specific text section
     if (textSection) {
         observer.observe(textSection);
     }
 
-    // --- 3. Industry Switcher Logic (Images completely removed) ---
+    // ==========================================
+    // 3. INDUSTRY SWITCHER LOGIC
+    // ==========================================
+    // A simple array of JavaScript objects acting as our "database" for the text content.
     const industryData = [
         {
             title: "Automotive & Aerospace",
@@ -295,16 +375,20 @@
         }
     ];
 
+    // This function is called by the 'onclick' attribute in the HTML.
+    // 'index' determines which object to pull from the array above.
+    // 'element' is the specific HTML div that the user clicked.
     function switchIndustry(index, element) {
-        // Remove active class from all items
+        
+        // Step A: Find every list item and remove the 'active' styling class
         document.querySelectorAll('.industry-item').forEach(item => {
             item.classList.remove('active');
         });
         
-        // Add active class to clicked item
+        // Step B: Add the 'active' styling class ONLY to the item just clicked
         element.classList.add('active');
         
-        // Update title and text
+        // Step C: Update the HTML text on the right side using the data from our array
         document.getElementById('details-title').innerText = industryData[index].title;
         document.getElementById('details-text').innerText = industryData[index].text;
     }

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galerkin Systems | Learning Architectures for Computational Engineering</title>
     
-    <!-- Premium font to match the exact look in image_4b8604.jpg -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -21,7 +20,7 @@
             -webkit-font-smoothing: antialiased;
         }
         
-        /* --- Static Toolbar / Navigation --- */
+        /* --- Dynamic Static Toolbar --- */
         nav { 
             position: fixed;
             top: 0; 
@@ -29,20 +28,34 @@
             width: 100%; 
             display: flex; 
             justify-content: space-between; 
-            padding: 2rem 6%; 
+            padding: 1.5rem 6%; /* Spacious initial padding */
             align-items: center; 
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.9);
+            background: transparent; /* Transparent at the top */
+            border-bottom: 1px solid transparent;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        
+        /* Thinner, frosted toolbar triggered on scroll */
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid #eaeaea;
+            padding: 0.5rem 6%; /* Much thinner padding */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
         }
-        
-        /* Made static logo bigger as requested */
+
         .logo img { 
-            height: 95px; 
+            height: 80px; 
             width: auto;
             display: block;
+            transition: height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Shrink logo to match the thinner toolbar */
+        nav.scrolled .logo img {
+            height: 35px; 
         }
 
         .nav-links {
@@ -50,7 +63,6 @@
             align-items: center;
         }
 
-        /* Updated links: Changed to Our Industries & removed About Us */
         .nav-links a { 
             margin-left: 32px; 
             text-decoration: none; 
@@ -63,50 +75,76 @@
         .lang-select { font-size: 1.05rem; color: #1a1a1a; margin-left: 32px; font-weight: 400; }
         .lang-select strong { font-weight: 600; }
 
-        /* --- Hero Section --- */
+        /* --- Full Screen Hero Section --- */
         .hero { 
-            padding: 14rem 6% 6rem 6%; 
+            position: relative;
+            height: 100vh; /* Covers the entire first screen */
+            width: 100%;
             display: flex; 
             align-items: center; 
-            justify-content: space-between; 
-            min-height: 90vh; 
-            gap: 4%;
+            justify-content: flex-start;
+            padding: 0 6%; 
+            overflow: hidden;
         }
-        .hero-text { max-width: 50%; }
+
+        /* Full screen background image */
+        .hero-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            animation: subtleZoom 3s ease-out forwards;
+        }
+
+        /* Gradient overlay to ensure text legibility over any image */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+            z-index: -1;
+        }
+
+        .hero-text { 
+            max-width: 45%;
+            z-index: 1; 
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInText 1s cubic-bezier(0.25, 1, 0.5, 1) 0.5s forwards;
+        }
+
         .hero-text h1 { 
-            font-size: 3.8rem; 
-            line-height: 1.15; 
+            font-size: 4.2rem; 
+            line-height: 1.1; 
             margin-bottom: 2rem; 
             letter-spacing: -1.5px; 
             font-weight: 600;
         } 
-        .hero-text p { font-size: 1.25rem; color: #444; max-width: 90%; margin-bottom: 2.5rem; font-weight: 300; }
+        .hero-text p { 
+            font-size: 1.25rem; 
+            color: #333; 
+            max-width: 90%; 
+            margin-bottom: 2.5rem; 
+            font-weight: 400; 
+        }
         
-        /* Full view fading in with NO border as requested */
-        .hero-image-container {
-            width: 46%;
-            opacity: 0;
-            transform: translateY(15px);
-            animation: fadeInImage 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        }
-        .hero-image { 
-            width: 100%; 
-            height: auto; 
-            display: block; 
-            border: none; /* No border */
+        @keyframes subtleZoom {
+            0% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
-        @keyframes fadeInImage {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeInText {
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- Industries Split Section (Inspired by image_4b8604.jpg) --- */
+        /* --- Industries Split Section --- */
         .industries-section {
             padding: 8rem 6%;
-            border-top: 1px solid #eaeaea;
             background-color: #ffffff;
         }
 
@@ -123,7 +161,6 @@
             gap: 5%;
         }
 
-        /* Left Side List Layout */
         .industries-list {
             width: 38%;
             display: flex;
@@ -137,31 +174,23 @@
             padding: 1.5rem 0.5rem;
             border-bottom: 1px solid #e0e0e0;
             cursor: pointer;
-            text-decoration: none;
             color: #555;
             font-size: 1.2rem;
             font-weight: 400;
             transition: all 0.3s ease;
         }
 
-        .industry-item .num {
-            font-size: 1rem;
-            opacity: 0.7;
-        }
+        .industry-item .num { font-size: 1rem; opacity: 0.7; }
 
-        /* Active Item State mimicking corporate green/dark style */
         .industry-item.active {
-            background-color: #00363a; /* Deep premium tone */
+            background-color: #00363a; 
             color: #ffffff;
             padding-left: 1.5rem;
             padding-right: 1.5rem;
             border-bottom-color: transparent;
         }
 
-        /* Right Side Details Layout */
-        .industries-details {
-            width: 57%;
-        }
+        .industries-details { width: 57%; }
 
         .details-graphic {
             width: 100%;
@@ -194,7 +223,6 @@
             margin: 0;
         }
 
-        /* Action button style matching reference look */
         .btn-action {
             display: inline-block;
             margin-top: 2.5rem;
@@ -209,22 +237,21 @@
         .btn-action:hover { opacity: 0.9; }
 
         @media (max-width: 992px) {
-            .hero, .split-container { flex-direction: column; }
-            .hero-text, .hero-image-container, .industries-list, .industries-details { width: 100%; }
-            .hero-image-container { margin-top: 3rem; }
+            .hero-text { max-width: 100%; }
+            .hero-overlay { background: rgba(255,255,255,0.85); }
+            .split-container { flex-direction: column; }
+            .industries-list, .industries-details { width: 100%; }
             .industries-details { margin-top: 4rem; }
         }
     </style>
 </head>
 <body>
 
-<nav>
+<nav id="navbar">
     <div class="logo">
-        <!-- Enlarged logo.png element -->
         <img src="logo.png" alt="Galerkin Logo">
     </div>
     <div class="nav-links">
-        <!-- Adjusted navigation array items matching requested parameters -->
         <a href="#industries">Our Industries</a>
         <a href="#partner">Become a Partner</a>
         <a href="#career">Career</a>
@@ -234,22 +261,19 @@
 </nav>
 
 <header class="hero">
+    <img src="image.png" alt="Computational Architecture Workflow" class="hero-bg-image">
+    <div class="hero-overlay"></div>
+    
     <div class="hero-text">
         <h1>Learning Architectures for Computational Engineering.</h1>
         <p>Galerkin Systems bridges the gap between high-fidelity simulation and real-time performance. We empower engineering teams to unlock computational speed through physics-informed intelligence.</p>
     </div>
-    <!-- Clean full view with smooth CSS fade animation and no borders -->
-    <div class="hero-image-container">
-        <img src="image.png" alt="Computational Architecture Workflow Illustration" class="hero-image">
-    </div>
 </header>
 
-<!-- New interactive section structured like image_4b8604.jpg -->
 <section id="industries" class="industries-section">
-    <h2>Selected Themes</h2>
+    <h2>Our Industries</h2>
     
     <div class="split-container">
-        <!-- Left Column: List Layout -->
         <div class="industries-list">
             <div class="industry-item active" onclick="switchIndustry(0, this)">
                 <span>Automotive & Aerospace</span>
@@ -269,15 +293,13 @@
             </div>
         </div>
 
-        <!-- Right Column: Context Details Layout -->
         <div class="industries-details">
             <div class="details-graphic">
-                <!-- Replace with dynamic industry specific graphics or fallback -->
                 <img id="details-img" src="image.png" alt="Industry Focal Illustration">
             </div>
             <div class="details-content">
                 <h3 id="details-title">Automotive & Aerospace</h3>
-                <p id="details-text">Accelerating high-fidelity crash simulations and aerostructural optimization routines. By applying reduced order modeling, we scale engineering cycles from days down to fractions of a second without sacrificing critical nonlinear accuracy metrics.</p>
+                <p id="details-text">Accelerating high-fidelity crash simulations and aerostructural optimisation routines. By applying reduced order modelling, we scale engineering cycles from days down to fractions of a second without sacrificing critical nonlinear accuracy metrics.</p>
                 <a href="#contact" class="btn-action">Start a Conversation</a>
             </div>
         </div>
@@ -285,21 +307,33 @@
 </section>
 
 <script>
-    // Data registry mimicking the theme block arrays in image_4b8604.jpg
+    // Toolbar Scroll Logic
+    const navbar = document.getElementById('navbar');
+    
+    window.addEventListener('scroll', () => {
+        // Triggers the thin toolbar class when scrolling down
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.removeClass('scrolled');
+        }
+    });
+
+    // Industry Switcher Logic
     const industryData = [
         {
             title: "Automotive & Aerospace",
-            text: "Accelerating high-fidelity crash simulations and aerostructural optimization routines. By applying reduced order modeling, we scale engineering cycles from days down to fractions of a second without sacrificing critical nonlinear accuracy metrics.",
+            text: "Accelerating high-fidelity crash simulations and aerostructural optimisation routines. By applying reduced order modelling, we scale engineering cycles from days down to fractions of a second without sacrificing critical nonlinear accuracy metrics.",
             img: "image.png"
         },
         {
             title: "Semiconductors & Electronics",
-            text: "Predictive micro-scale thermal simulation and physical stress mapping for high-density component arrays. Our machine learning pipelines ensure rapid hot-spot localization before layout layout compilation.",
+            text: "Predictive micro-scale thermal simulation and physical stress mapping for high-density component arrays. Our machine learning pipelines ensure rapid hot-spot localisation before layout compilation.",
             img: "image.png" 
         },
         {
             title: "Renewable Energy Systems",
-            text: "Optimizing material degradation pathways in advanced high-capacity battery architectures and offshore wind turbine structures. Physics-informed models offer accelerated lifecycles analysis for long-term deployments.",
+            text: "Optimising material degradation pathways in advanced high-capacity battery architectures and offshore wind turbine structures. Physics-informed models offer accelerated lifecycle analysis for long-term deployments.",
             img: "image.png"
         },
         {
@@ -310,15 +344,12 @@
     ];
 
     function switchIndustry(index, element) {
-        // Remove active class styling from all items
         document.querySelectorAll('.industry-item').forEach(item => {
             item.classList.remove('active');
         });
         
-        // Add active style to selected row item
         element.classList.add('active');
         
-        // Update the right side detail context dynamically
         document.getElementById('details-title').innerText = industryData[index].title;
         document.getElementById('details-text').innerText = industryData[index].text;
         document.getElementById('details-img').src = industryData[index].img;

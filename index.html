@@ -20,6 +20,28 @@
             -webkit-font-smoothing: antialiased;
         }
         
+        /* --- Dynamic Transforming Logo --- */
+        .dynamic-logo {
+            position: fixed;
+            /* Start huge and centered */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            max-width: 700px;
+            z-index: 2005; /* High z-index to stay above everything */
+            pointer-events: none; /* Let clicks pass through the big logo */
+            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Scrolled state: Moves to the top left and shrinks to fit the toolbar */
+        body.scrolled .dynamic-logo {
+            top: 0.5rem; /* Matches the scrolled navbar padding-top */
+            left: 6%;    /* Matches the navbar left padding */
+            transform: translate(0, 0);
+            width: 35px; /* Final logo size in the toolbar */
+        }
+
         /* --- Fixed Navigation Toolbar --- */
         nav { 
             position: fixed;
@@ -31,29 +53,24 @@
             padding: 1.5rem 6%; 
             align-items: center; 
             z-index: 2000; 
-            background: transparent; 
-            border-bottom: 1px solid transparent;
+            background: #ffffff; /* Solid background so text is readable over the scrolling content */
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
         
-        nav.scrolled {
+        /* Triggers when scrolling down */
+        body.scrolled nav {
+            padding: 0.5rem 6%; /* Shrinks padding */
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid #eaeaea;
-            padding: 0.5rem 6%; 
             box-shadow: 0 4px 20px rgba(0,0,0,0.03);
         }
 
-        .logo img { 
-            height: 80px; 
-            width: auto;
-            display: block;
-            transition: height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        nav.scrolled .logo img {
-            height: 35px; 
+        /* Invisible spacer to maintain flexbox layout while the real logo floats */
+        .logo-spacer {
+            width: 35px;
+            height: 35px;
         }
 
         .nav-links {
@@ -79,25 +96,13 @@
         }
         .lang-select strong { font-weight: 600; }
 
-        /* --- 1. Full Screen Image Section --- */
-        .hero-visual {
-            height: 100vh; /* Takes up the exact full height of the user's screen */
+        /* --- 1. Full Screen Spacer (Pushes text down to the next scroll block) --- */
+        .hero-visual-space {
+            height: 100vh; 
             width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background-color: #ffffff;
         }
 
-        .hero-visual img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            will-change: opacity;
-        }
-
-        /* --- 2. Tagline Text Section (Positioned safely below the image) --- */
+        /* --- 2. Tagline Text Section --- */
         .hero-text-section {
             padding: 8rem 6% 4rem 6%;
             background-color: #ffffff;
@@ -110,7 +115,6 @@
             letter-spacing: -1.5px; 
             font-weight: 600;
             max-width: 900px;
-            /* Initial state for scroll animation */
             opacity: 0;
             transform: translateY(40px);
             transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
@@ -122,14 +126,11 @@
             max-width: 800px; 
             margin-bottom: 2.5rem; 
             font-weight: 400; 
-            /* Initial state for scroll animation */
             opacity: 0;
             transform: translateY(40px);
-            /* Adds a slight delay so the paragraph fades in just after the heading */
             transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1) 0.15s, transform 1s cubic-bezier(0.25, 1, 0.5, 1) 0.15s;
         }
 
-        /* Class added by Javascript when scrolled into view */
         .hero-text-section.visible h1,
         .hero-text-section.visible p {
             opacity: 1;
@@ -152,6 +153,7 @@
         .split-container {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
             gap: 5%;
         }
 
@@ -159,26 +161,23 @@
 
         .industry-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 1.5rem 0.5rem; border-bottom: 1px solid #e0e0e0;
+            padding: 1.5rem 1rem; border-bottom: 1px solid #e0e0e0;
             cursor: pointer; color: #555; font-size: 1.2rem; font-weight: 400; transition: all 0.3s ease;
         }
 
         .industry-item .num { font-size: 1rem; opacity: 0.7; }
         .industry-item.active {
             background-color: #00363a; color: #ffffff;
-            padding-left: 1.5rem; padding-right: 1.5rem; border-bottom-color: transparent;
+            border-bottom-color: transparent;
         }
 
-        .industries-details { width: 57%; }
-
-        .details-graphic {
-            width: 100%; height: 380px; background-color: #f7f7f7;
-            margin-bottom: 2.5rem; overflow: hidden; display: flex; align-items: center; justify-content: center;
+        .industries-details { 
+            width: 57%; 
+            padding-top: 1.5rem; 
         }
-        .details-graphic img { width: 100%; height: 100%; object-fit: cover; }
 
         .details-content h3 { font-size: 2.4rem; margin: 0 0 1.5rem 0; letter-spacing: -0.5px; font-weight: 500; }
-        .details-content p { font-size: 1.2rem; color: #444; font-weight: 300; margin: 0; }
+        .details-content p { font-size: 1.2rem; color: #444; font-weight: 300; margin: 0; line-height: 1.6; }
 
         .btn-action {
             display: inline-block; margin-top: 2.5rem; padding: 1rem 2rem;
@@ -188,18 +187,20 @@
         .btn-action:hover { opacity: 0.9; }
 
         @media (max-width: 992px) {
+            .dynamic-logo { width: 90vw; }
             .split-container { flex-direction: column; }
             .industries-list, .industries-details { width: 100%; }
-            .industries-details { margin-top: 4rem; }
+            .industries-details { padding-top: 2rem; margin-top: 1rem; }
         }
     </style>
 </head>
 <body>
 
+<img src="logo.png" alt="Galerkin Logo" class="dynamic-logo" id="dynamic-logo">
+
 <nav id="navbar">
-    <div class="logo">
-        <img src="logo.png" alt="Galerkin Logo">
-    </div>
+    <div class="logo-spacer"></div>
+    
     <div class="nav-links">
         <a href="#industries">Our Industries</a>
         <a href="#partner">Become a Partner</a>
@@ -209,9 +210,7 @@
     </div>
 </nav>
 
-<header class="hero-visual">
-    <img src="image.png" alt="Computational Architecture Workflow" id="hero-img">
-</header>
+<div class="hero-visual-space"></div>
 
 <section class="hero-text-section" id="hero-text-section">
     <h1>Learning Architectures for Computational Engineering.</h1>
@@ -242,9 +241,6 @@
         </div>
 
         <div class="industries-details">
-            <div class="details-graphic">
-                <img id="details-img" src="image.png" alt="Industry Focal Illustration">
-            </div>
             <div class="details-content">
                 <h3 id="details-title">Automotive & Aerospace</h3>
                 <p id="details-text">Accelerating high-fidelity crash simulations and aerostructural optimisation routines. By applying reduced order modelling, we scale engineering cycles from days down to fractions of a second without sacrificing critical nonlinear accuracy metrics.</p>
@@ -255,29 +251,18 @@
 </section>
 
 <script>
-    const navbar = document.getElementById('navbar');
-    const heroImg = document.getElementById('hero-img');
-    const textSection = document.getElementById('hero-text-section');
-    
-    // --- 1. Scroll Logic for Toolbar & Image Fade Out ---
+    // --- 1. Scroll Logic for Logo Transformation & Toolbar ---
     window.addEventListener('scroll', () => {
-        let scrollY = window.scrollY;
-        
-        // Toolbar class toggle
-        if (scrollY > 50) {
-            navbar.classList.add('scrolled');
+        // As soon as the user scrolls down 50 pixels, trigger the transformation
+        if (window.scrollY > 50) {
+            document.body.classList.add('scrolled');
         } else {
-            navbar.classList.remove('scrolled');
-        }
-        
-        // Fade out the hero image over the first 500px of scrolling
-        if (heroImg) {
-            heroImg.style.opacity = Math.max(1 - (scrollY / 500), 0);
+            document.body.classList.remove('scrolled');
         }
     });
 
     // --- 2. Intersection Observer for Text Fade In ---
-    // This watches the text section. As soon as 20% of it enters the screen from the bottom, it triggers the fade-in.
+    const textSection = document.getElementById('hero-text-section');
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -290,40 +275,38 @@
         observer.observe(textSection);
     }
 
-    // --- 3. Industry Switcher Logic ---
+    // --- 3. Industry Switcher Logic (Images completely removed) ---
     const industryData = [
         {
             title: "Automotive & Aerospace",
-            text: "Accelerating high-fidelity crash simulations and aerostructural optimisation routines. By applying reduced order modelling, we scale engineering cycles from days down to fractions of a second without sacrificing critical nonlinear accuracy metrics.",
-            img: "image.png"
+            text: "Accelerating high-fidelity crash simulations and aerostructural optimisation routines. By applying reduced order modelling, we scale engineering cycles from days down to fractions of a second without sacrificing critical nonlinear accuracy metrics."
         },
         {
             title: "Semiconductors & Electronics",
-            text: "Predictive micro-scale thermal simulation and physical stress mapping for high-density component arrays. Our machine learning pipelines ensure rapid hot-spot localisation before layout compilation.",
-            img: "image.png" 
+            text: "Predictive micro-scale thermal simulation and physical stress mapping for high-density component arrays. Our machine learning pipelines ensure rapid hot-spot localisation before layout compilation."
         },
         {
             title: "Renewable Energy Systems",
-            text: "Optimising material degradation pathways in advanced high-capacity battery architectures and offshore wind turbine structures. Physics-informed models offer accelerated lifecycle analysis for long-term deployments.",
-            img: "image.png"
+            text: "Optimising material degradation pathways in advanced high-capacity battery architectures and offshore wind turbine structures. Physics-informed models offer accelerated lifecycle analysis for long-term deployments."
         },
         {
             title: "Advanced Manufacturing",
-            text: "Real-time process control and parameter mapping for laser-sintering and additive manufacturing chains. We integrate structural integrity predictive filters directly onto the edge computing nodes.",
-            img: "image.png"
+            text: "Real-time process control and parameter mapping for laser-sintering and additive manufacturing chains. We integrate structural integrity predictive filters directly onto the edge computing nodes."
         }
     ];
 
     function switchIndustry(index, element) {
+        // Remove active class from all items
         document.querySelectorAll('.industry-item').forEach(item => {
             item.classList.remove('active');
         });
         
+        // Add active class to clicked item
         element.classList.add('active');
         
+        // Update title and text
         document.getElementById('details-title').innerText = industryData[index].title;
         document.getElementById('details-text').innerText = industryData[index].text;
-        document.getElementById('details-img').src = industryData[index].img;
     }
 </script>
 

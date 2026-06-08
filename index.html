@@ -103,10 +103,10 @@
             text-decoration: none;
         }
 
-        /* # Small header logo using selected dot-projection concept. */
+        /* # Small header logo using bracket-dot concept. */
         .brand-logo {
             display: block;
-            width: 148px;
+            width: 170px;
             height: auto;
         }
 
@@ -156,7 +156,7 @@
             margin-bottom: 3rem;
         }
 
-        /* # Large hero logo using dot-projection style. */
+        /* # Large hero logo using bracket-dot style. */
         .hero-logo {
             display: block;
             width: min(420px, 100%);
@@ -471,7 +471,7 @@
             }
 
             .brand-logo {
-                width: 132px;
+                width: 152px;
             }
 
             .hero-panel {
@@ -500,17 +500,24 @@
 </head>
 
 <body>
-    <!-- # Header with compact dot-projection galerkin logo. -->
+    <!-- # Header with compact bracket-dot galerkin logo. -->
     <header>
         <div class="nav-wrap">
             <a href="/" class="brand" aria-label="galerkin home">
-                <!-- # Inline SVG avoids separate logo files and remains sharp on all screens. -->
-                <svg class="brand-logo" viewBox="0 0 360 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <!-- # Dot projection mark. -->
-                    <circle cx="16" cy="41" r="5" fill="#00363a"/>
+                <!-- # Header logo: bracket + dot + galerkin wordmark. -->
+                <svg class="brand-logo" viewBox="0 0 390 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <!-- # Left bracket suggests a controlled computational environment. -->
+                    <path d="M34 18 H16 V62 H34"
+                          stroke="#00363a"
+                          stroke-width="4"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"/>
+
+                    <!-- # Dot suggests a projection point or engineering objective. -->
+                    <circle cx="44" cy="41" r="5" fill="#00363a"/>
 
                     <!-- # galerkin wordmark. -->
-                    <text x="38" y="52"
+                    <text x="66" y="52"
                           font-family="Inter, Helvetica, Arial, sans-serif"
                           font-size="44"
                           font-weight="800"
@@ -535,14 +542,22 @@
         <section id="intro" aria-labelledby="hero-title">
             <div class="hero-panel">
                 <div class="hero-copy-wrap">
-                    <!-- # Large dot-projection logo in the hero. -->
+                    <!-- # Large bracket-dot logo in the hero. -->
                     <div class="hero-brand">
-                        <svg class="hero-logo" viewBox="0 0 360 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="galerkin logo">
-                            <!-- # Dot projection mark. -->
-                            <circle cx="16" cy="41" r="5" fill="#00363a"/>
+                        <!-- # Hero logo: larger bracket + dot + galerkin wordmark. -->
+                        <svg class="hero-logo" viewBox="0 0 390 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="galerkin logo">
+                            <!-- # Left bracket suggests a controlled computational environment. -->
+                            <path d="M34 18 H16 V62 H34"
+                                  stroke="#00363a"
+                                  stroke-width="4"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"/>
+
+                            <!-- # Dot suggests a projection point or engineering objective. -->
+                            <circle cx="44" cy="41" r="5" fill="#00363a"/>
 
                             <!-- # galerkin wordmark. -->
-                            <text x="38" y="52"
+                            <text x="66" y="52"
                                   font-family="Inter, Helvetica, Arial, sans-serif"
                                   font-size="44"
                                   font-weight="800"
@@ -574,7 +589,7 @@
         <!-- # Purpose replaces Positioning. -->
         <section aria-labelledby="purpose-title">
             <div class="section-head">
-                <div class="eyebrow">Purpose</div>
+                <div class="eyebrow">Overview</div>
 
                 <div class="reading-block">
                     <h2 id="purpose-title">A controlled environment for simulation-led decisions.</h2>

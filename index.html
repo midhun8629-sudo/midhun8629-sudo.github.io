@@ -1,398 +1,626 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
+    <!-- # Basic document setup for browser compatibility and mobile scaling. -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galerkin Systems | Learning Architectures for Computational Engineering</title>
-    
+    <title>galerkin | Simulation Workflows for Computational Engineering</title>
+
+    <!-- # Loads Inter for logo, headings, navigation, and interface text. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <!-- # Improves loading of Google font files. -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- # Inter gives the site a clean technical identity. -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* --- GLOBAL RESET & TYPOGRAPHY --- */
-        /* Forces padding and borders to be included in the element's total width/height */
-        * { box-sizing: border-box; }
-        
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-            margin: 0; 
-            color: #1a1a1a; 
-            line-height: 1.6;
-            background-color: #ffffff;
-            /* Makes text rendering sharper on macOS/iOS devices */
+        /* # Includes padding and borders inside width and height calculations. */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* # Central colour system for the whole website. */
+        :root {
+            --accent: #00363a;
+            --paper: #fbfaf7;
+            --panel: #fffdf9;
+            --ink: #181818;
+            --muted: #555;
+            --line: #d8d0c4;
+        }
+
+        /* # Smooth anchor scrolling for navigation links. */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* # Warm paper background with readable serif body text. */
+        body {
+            margin: 0;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 18px;
+            line-height: 1.75;
             -webkit-font-smoothing: antialiased;
-        }
-        
-        /* --- 1. DYNAMIC TRANSFORMING LOGO --- */
-        /* This logo sits outside the normal page layout so it can float anywhere */
-        .dynamic-logo {
-            position: fixed;
-            
-            /* Centers the logo perfectly in the middle of the screen initially */
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            
-            /* Sets the initial giant size */
-            width: 80vw;
-            max-width: 700px;
-            
-            /* High z-index ensures it sits above text and images */
-            z-index: 2005; 
-            
-            /* CRITICAL: Prevents the invisible box around the giant logo from blocking 
-               the user from clicking links or text underneath it */
-            pointer-events: none; 
-            
-            /* Smoothly animates any changes to size, position, or transform over 0.7 seconds */
-            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+            text-rendering: optimizeLegibility;
         }
 
-        /* * When JavaScript adds the 'scrolled' class to the <body>, these rules override the ones above.
-         * The logo moves to the top left and shrinks. 
-         */
-        body.scrolled .dynamic-logo {
-            top: 0.5rem; /* Aligns vertically with the scrolled navbar */
-            left: 6%;    /* Aligns horizontally with the navbar padding */
-            transform: translate(0, 0); /* Removes the center-alignment offset */
-            width: 35px; /* Shrinks to icon size */
-        }
-
-        /* --- 2. FIXED NAVIGATION TOOLBAR --- */
-        nav { 
-            position: fixed;
-            top: 0; 
-            left: 0;
-            width: 100%; 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 1.5rem 6%; 
-            align-items: center; 
-            z-index: 2000; /* Sits just below the dynamic logo (2005) */
-            
-            /* Starts with a solid white background to cover content scrolling underneath it */
-            background: #ffffff; 
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        
-        /* Toolbar styling when the user scrolls down */
-        body.scrolled nav {
-            padding: 0.5rem 6%; /* Thinner padding */
-            /* Semi-transparent white background with a blur effect (frosted glass) */
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid #eaeaea;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-        }
-
-        /* * Because the actual logo is floating ('position: fixed'), the navbar doesn't 
-         * know it exists. This invisible spacer takes up the exact size of the final logo 
-         * to prevent the navigation links from snapping to the far left of the screen.
-         */
-        .logo-spacer {
-            width: 35px;
-            height: 35px;
-        }
-
-        /* Flexbox aligns the links in a row and centers them vertically */
-        .nav-links {
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-links a { 
-            margin-left: 32px; 
-            text-decoration: none; 
-            color: #1a1a1a; 
-            font-weight: 500; 
-            font-size: 0.65rem; 
-            transition: color 0.2s ease; 
-        }
-        
-        .nav-links a:hover { color: #666; }
-        
-        .lang-select { 
-            font-size: 0.65rem; 
-            color: #1a1a1a; 
-            margin-left: 32px; 
-            font-weight: 400; 
-        }
-        .lang-select strong { font-weight: 600; }
-
-        /* --- 3. PAGE STRUCTURE & ANIMATIONS --- */
-        
-        /* Forces the user to scroll down exactly one full screen height (100vh) 
-           before they see the text. This gives the giant logo an empty canvas. */
-        .hero-visual-space {
-            height: 70vh; 
+        /* # Thin brand line at the very top of the page. */
+        body::before {
+            content: "";
+            display: block;
             width: 100%;
+            height: 4px;
+            background: var(--accent);
         }
 
-        /* The container for your main tagline */
-        .hero-text-section {
-            padding: 8rem 6% 4rem 6%;
-            background-color: #ffffff;
+        /* # Brand-coloured text selection. */
+        ::selection {
+            background: rgba(0, 54, 58, 0.18);
         }
 
-        /* Initial hidden state for the scroll animation */
-        .hero-text-section h1 { 
-            font-size: 4.2rem; 
-            line-height: 1.1; 
-            margin-bottom: 2rem; 
-            letter-spacing: -1.5px; 
-            font-weight: 600;
-            max-width: 900px;
-            
-            /* Starts completely transparent and pushed 40px down */
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
-        } 
-        
-        .hero-text-section p { 
-            font-size: 1.25rem; 
-            color: #333; 
-            max-width: 800px; 
-            margin-bottom: 2.5rem; 
-            font-weight: 400; 
-            
-            opacity: 0;
-            transform: translateY(40px);
-            /* The '0.15s' at the end is a delay. The paragraph fades in slightly AFTER the heading. */
-            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1) 0.15s, transform 1s cubic-bezier(0.25, 1, 0.5, 1) 0.15s;
+        /* # Minimal link styling. */
+        a {
+            color: var(--ink);
+            text-decoration-thickness: 1px;
+            text-underline-offset: 4px;
         }
 
-        /* When JS adds the 'visible' class, opacity becomes 1 and it moves to its normal position (0) */
-        .hero-text-section.visible h1,
-        .hero-text-section.visible p {
-            opacity: 1;
-            transform: translateY(0);
+        /* # Accent hover state for links. */
+        a:hover {
+            color: var(--accent);
         }
 
-        /* --- 4. INDUSTRIES INTERACTIVE SECTION --- */
-        .industries-section {
-            padding: 6rem 6% 8rem 6%;
-            background-color: #ffffff;
+        /* # Sticky header keeps navigation visible. */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(251, 250, 247, 0.96);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
-        .industries-section h2 {
-            font-size: 3.2rem;
-            letter-spacing: -1px;
-            margin-bottom: 4rem;
-            font-weight: 600;
-        }
-
-        /* Uses flexbox to sit the clickable list (left) and the text details (right) side-by-side */
-        .split-container {
+        /* # Header layout. */
+        .nav-wrap {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start; /* Ensures both columns start at the exact same height */
-            gap: 5%;
-        }
-
-        /* Left Column: 38% width */
-        .industries-list { 
-            width: 38%; 
-            display: flex; 
-            flex-direction: column; 
-        }
-
-        /* Individual list items */
-        .industry-item {
-            display: flex; 
-            justify-content: space-between; 
             align-items: center;
-            padding: 1.5rem 1rem; 
-            border-bottom: 1px solid #e0e0e0;
-            cursor: pointer; /* Changes mouse to a clicking hand */
-            color: #555; 
-            font-size: 1.2rem; 
-            font-weight: 400; 
-            transition: all 0.3s ease;
+            justify-content: space-between;
+            gap: 2rem;
         }
 
-        .industry-item .num { font-size: 1rem; opacity: 0.7; }
-        
-        /* The styling applied to the currently selected industry */
-        .industry-item.active {
-            background-color: #00363a; 
+        /* # Brand link removes underline and aligns the inline SVG logo. */
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        /* # Small header logo using selected dot-projection concept. */
+        .brand-logo {
+            display: block;
+            width: 148px;
+            height: auto;
+        }
+
+        /* # Compact navigation. */
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        /* # Navigation link style. */
+        nav a {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--ink);
+        }
+
+        /* # Main page container. */
+        main {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 5rem 1.5rem 4rem 1.5rem;
+        }
+
+        /* # Section spacing. */
+        section {
+            margin-bottom: 6rem;
+        }
+
+        /* # Hero panel with the green left border as the primary visual identity. */
+        .hero-panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-left: 12px solid var(--accent);
+            padding: clamp(2rem, 5vw, 4rem);
+            max-width: 980px;
+        }
+
+        /* # Large hero logo area. */
+        .hero-brand {
+            margin-bottom: 3rem;
+        }
+
+        /* # Large hero logo using dot-projection style. */
+        .hero-logo {
+            display: block;
+            width: min(420px, 100%);
+            height: auto;
+        }
+
+        /* # Constrains hero text for readable line length. */
+        .hero-copy-wrap {
+            max-width: 760px;
+        }
+
+        /* # Large hero headline. */
+        h1 {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            line-height: 1.02;
+            letter-spacing: -0.07em;
+            font-weight: 700;
+            margin: 0 0 2rem 0;
+        }
+
+        /* # Main section headings. */
+        h2 {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            line-height: 1.2;
+            letter-spacing: -0.04em;
+            font-weight: 700;
+            margin: 0 0 1.5rem 0;
+        }
+
+        /* # Card and subsection headings. */
+        h3 {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1.05rem;
+            line-height: 1.35;
+            font-weight: 700;
+            margin: 0 0 0.75rem 0;
+        }
+
+        /* # Paragraph spacing. */
+        p {
+            margin: 0 0 1.4rem 0;
+        }
+
+        /* # Larger hero paragraph text. */
+        .hero-copy {
+            font-size: 1.2rem;
+            color: #333;
+            max-width: 680px;
+        }
+
+        /* # Simple text CTA below the hero copy. */
+        .hero-action {
+            margin-top: 2rem;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        /* # Small section label. */
+        .eyebrow {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        /* # Narrow reading block for paragraph-heavy sections. */
+        .reading-block {
+            max-width: 760px;
+        }
+
+        /* # Section layout with label on the left and content on the right. */
+        .section-head {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 2rem;
+            border-top: 1px solid var(--ink);
+            padding-top: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* # Product and industry card grid. */
+        .card-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            counter-reset: card;
+        }
+
+        /* # Text cards for products and industries. */
+        .text-card {
+            counter-increment: card;
+            position: relative;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            padding: 1.5rem;
+            min-height: 190px;
+            transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+        }
+
+        /* # Small numbering for text cards. */
+        .text-card::before {
+            content: counter(card, decimal-leading-zero);
+            display: block;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 1.25rem;
+        }
+
+        /* # Subtle hover state for cards. */
+        .text-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            background: #ffffff;
+        }
+
+        /* # Card body text. */
+        .text-card p {
+            color: #444;
+            margin-bottom: 0;
+        }
+
+        /* # Private access grid. */
+        .access-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* # Dark access cards. */
+        .access-card {
+            background: var(--accent);
             color: #ffffff;
-            border-bottom-color: transparent;
+            padding: 1.5rem;
+            min-height: 220px;
         }
 
-        /* Right Column: 57% width */
-        .industries-details { 
-            width: 57%; 
-            padding-top: 1.5rem; /* Pushes the text down to align with the first list item's padding */
+        /* # White access card headings. */
+        .access-card h3 {
+            color: #ffffff;
         }
 
-        .details-content h3 { font-size: 2.4rem; margin: 0 0 1.5rem 0; letter-spacing: -0.5px; font-weight: 500; }
-        .details-content p { font-size: 1.2rem; color: #444; font-weight: 300; margin: 0; line-height: 1.6; }
-
-        .btn-action {
-            display: inline-block; 
-            margin-top: 2.5rem; 
-            padding: 1rem 2rem;
-            background-color: #00363a; 
-            color: white; 
-            text-decoration: none; 
-            font-weight: 500;
-            border-radius: 30px; 
-            transition: opacity 0.2s;
+        /* # Soft white access card text. */
+        .access-card p {
+            color: rgba(255, 255, 255, 0.82);
+            margin-bottom: 0;
         }
-        .btn-action:hover { opacity: 0.9; }
 
-        /* --- 5. RESPONSIVE DESIGN (MOBILE/TABLET) --- */
-        /* These rules apply only when the screen is smaller than 992px wide */
-        @media (max-width: 992px) {
-            .dynamic-logo { width: 90vw; } /* Logo takes up more space on mobile */
-            .split-container { flex-direction: column; } /* Stacks the columns vertically */
-            .industries-list, .industries-details { width: 100%; }
-            .industries-details { padding-top: 2rem; margin-top: 1rem; }
+        /* # Process list with visible left rule. */
+        .process {
+            counter-reset: step;
+            margin-top: 2rem;
+            border-left: 2px solid var(--accent);
+            padding-left: 1.5rem;
+        }
+
+        /* # Individual process step. */
+        .process-item {
+            counter-increment: step;
+            border-bottom: 1px solid var(--line);
+            padding: 1.25rem 0;
+            display: grid;
+            grid-template-columns: 3rem 1fr;
+            gap: 1rem;
+        }
+
+        /* # Process step number. */
+        .process-item::before {
+            content: counter(step, decimal-leading-zero);
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            padding-top: 0.2rem;
+        }
+
+        /* # Process text. */
+        .process-item p {
+            margin-bottom: 0;
+            color: #444;
+        }
+
+        /* # Terms box. */
+        .terms-box {
+            background: var(--panel);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            color: #444;
+        }
+
+        /* # Contact section with secondary bracket-field mark. */
+        .contact-block {
+            background: var(--accent);
+            color: #ffffff;
+            padding: clamp(2rem, 5vw, 3rem);
+            display: grid;
+            grid-template-columns: 1fr 120px;
+            gap: 2rem;
+            align-items: end;
+        }
+
+        /* # Contact section labels and heading. */
+        .contact-block .eyebrow,
+        .contact-block h2 {
+            color: #ffffff;
+        }
+
+        /* # Contact paragraph text. */
+        .contact-block p {
+            color: rgba(255, 255, 255, 0.84);
+        }
+
+        /* # Contact name. */
+        .contact-name {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: #ffffff;
+        }
+
+        /* # Contact role. */
+        .contact-role {
+            color: rgba(255, 255, 255, 0.72);
+            margin-bottom: 1rem;
+        }
+
+        /* # Contact email link. */
+        .contact-block a {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration-color: rgba(255, 255, 255, 0.65);
+        }
+
+        /* # Secondary bracket-field mark. */
+        .bracket-mark {
+            width: 96px;
+            height: 96px;
+            justify-self: end;
+        }
+
+        /* # Footer container. */
+        footer {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem 1.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* # Footer link layout. */
+        footer .footer-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        /* # Footer link colour. */
+        footer a {
+            color: var(--muted);
+        }
+
+        /* # Tablet layout. */
+        @media (max-width: 900px) {
+            .access-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-block {
+                grid-template-columns: 1fr;
+            }
+
+            .bracket-mark {
+                justify-self: start;
+            }
+        }
+
+        /* # Mobile layout. */
+        @media (max-width: 720px) {
+            body {
+                font-size: 17px;
+            }
+
+            .nav-wrap {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            nav {
+                justify-content: flex-start;
+                gap: 0.9rem;
+            }
+
+            main {
+                padding-top: 3rem;
+            }
+
+            section {
+                margin-bottom: 4.5rem;
+            }
+
+            .brand-logo {
+                width: 132px;
+            }
+
+            .hero-panel {
+                padding: 1.5rem;
+                border-left-width: 8px;
+            }
+
+            .hero-brand {
+                margin-bottom: 2.2rem;
+            }
+
+            .section-head {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .card-list {
+                grid-template-columns: 1fr;
+            }
+
+            .process-item {
+                grid-template-columns: 2.5rem 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
+    <!-- # Header with compact dot-projection galerkin logo. -->
+    <header>
+        <div class="nav-wrap">
+            <a href="/" class="brand" aria-label="galerkin home">
+                <!-- # Inline SVG avoids separate logo files and remains sharp on all screens. -->
+                <svg class="brand-logo" viewBox="0 0 360 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <!-- # Dot projection mark. -->
+                    <circle cx="16" cy="41" r="5" fill="#00363a"/>
 
-<img src="logo.png" alt="Galerkin Logo" class="dynamic-logo" id="dynamic-logo">
+                    <!-- # galerkin wordmark. -->
+                    <text x="38" y="52"
+                          font-family="Inter, Helvetica, Arial, sans-serif"
+                          font-size="44"
+                          font-weight="800"
+                          letter-spacing="-1.8"
+                          fill="#181818">galerkin</text>
+                </svg>
+            </a>
 
-<nav id="navbar">
-    <div class="logo-spacer"></div>
-    
-    <div class="nav-links">
-        <a href="#industries">Our Industries</a>
-        <a href="#partner">Become a Partner</a>
-        <a href="#career">Career</a>
-        <a href="#contact">Contact</a>
-        <span class="lang-select">DE | <strong>EN</strong></span>
-    </div>
-</nav>
-
-<div class="hero-visual-space"></div>
-
-<section class="hero-text-section" id="hero-text-section">
-    <h1>Learning Architectures for Computational Engineering.</h1>
-    <p>Galerkin Systems bridges the gap between high-fidelity simulation and real-time performance. We empower engineering teams to unlock computational speed through physics-informed intelligence.</p>
-</section>
-
-<section id="industries" class="industries-section">
-    <h2>Our Industries</h2>
-    
-    <div class="split-container">
-        <div class="industries-list">
-            <div class="industry-item active" onclick="switchIndustry(0, this)">
-                <span>Automotive & Aerospace</span>
-                <span class="num">(01)</span>
-            </div>
-            <div class="industry-item" onclick="switchIndustry(1, this)">
-                <span>Semiconductors & Electronics</span>
-                <span class="num">(02)</span>
-            </div>
-            <div class="industry-item" onclick="switchIndustry(2, this)">
-                <span>Renewable Energy Systems</span>
-                <span class="num">(03)</span>
-            </div>
-            <div class="industry-item" onclick="switchIndustry(3, this)">
-                <span>Advanced Manufacturing</span>
-                <span class="num">(04)</span>
-            </div>
+            <!-- # Navigation links point to sections on the same page. -->
+            <nav aria-label="Primary navigation">
+                <a href="#products">Products</a>
+                <a href="#industries">Industries</a>
+                <a href="#access">Access</a>
+                <a href="#terms">Terms</a>
+                <a href="#contact">Contact</a>
+            </nav>
         </div>
+    </header>
 
-        <div class="industries-details">
-            <div class="details-content">
-                <h3 id="details-title">Automotive & Aerospace</h3>
-                <p id="details-text">Accelerating high-fidelity crash simulations and aerostructural optimisation routines. By applying reduced order modelling, we scale engineering cycles from days down to fractions of a second without sacrificing critical nonlinear accuracy metrics.</p>
-                <a href="#contact" class="btn-action">Start a Conversation</a>
+    <main>
+        <!-- # Hero keeps the large logo and green border, but removes the Computational Engineering label. -->
+        <section id="intro" aria-labelledby="hero-title">
+            <div class="hero-panel">
+                <div class="hero-copy-wrap">
+                    <!-- # Large dot-projection logo in the hero. -->
+                    <div class="hero-brand">
+                        <svg class="hero-logo" viewBox="0 0 360 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="galerkin logo">
+                            <!-- # Dot projection mark. -->
+                            <circle cx="16" cy="41" r="5" fill="#00363a"/>
+
+                            <!-- # galerkin wordmark. -->
+                            <text x="38" y="52"
+                                  font-family="Inter, Helvetica, Arial, sans-serif"
+                                  font-size="44"
+                                  font-weight="800"
+                                  letter-spacing="-1.8"
+                                  fill="#181818">galerkin</text>
+                        </svg>
+                    </div>
+
+                    <!-- # Main public positioning line. -->
+                    <h1 id="hero-title">Simulation workflows for computational engineering.</h1>
+
+                    <!-- # Outcome-focused explanation without exposing internal technology. -->
+                    <p class="hero-copy">
+                        galerkin helps research and engineering teams prepare, manage, and review computational studies in a secure workflow environment.
+                    </p>
+
+                    <p class="hero-copy">
+                        The result is less repetitive setup work, stronger consistency across studies, and traceable reporting for expert validation.
+                    </p>
+
+                    <!-- # Quiet conversion link for controlled access. -->
+                    <p class="hero-action">
+                        <a href="#contact">Request Access →</a>
+                    </p>
+                </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
 
-<script>
-    // ==========================================
-    // 1. SCROLL LOGIC (Logo Transformation & Toolbar)
-    // ==========================================
-    // This listens for any scroll movement in the browser window.
-    window.addEventListener('scroll', () => {
-        // If the user has scrolled more than 50 pixels down from the absolute top...
-        if (window.scrollY > 50) {
-            // Add the class 'scrolled' to the <body> tag.
-            // This triggers the CSS rules (e.g., body.scrolled .dynamic-logo)
-            document.body.classList.add('scrolled');
-        } else {
-            // Remove the class when they scroll back to the very top.
-            document.body.classList.remove('scrolled');
-        }
-    });
+        <!-- # Purpose replaces Positioning. -->
+        <section aria-labelledby="purpose-title">
+            <div class="section-head">
+                <div class="eyebrow">Purpose</div>
 
-    // ==========================================
-    // 2. INTERSECTION OBSERVER (Fade-In Text)
-    // ==========================================
-    // This creates a tool that watches when elements enter the screen.
-    const textSection = document.getElementById('hero-text-section');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            // 'isIntersecting' is true when the element becomes visible
-            if (entry.isIntersecting) {
-                // Add the 'visible' class to trigger the CSS opacity/transform transition
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { 
-        // threshold: 0.2 means the animation only triggers when at least 
-        // 20% of the text section is visible on the screen.
-        threshold: 0.2 
-    });
+                <div class="reading-block">
+                    <h2 id="purpose-title">A controlled environment for simulation-led decisions.</h2>
 
-    // Tell the observer to start watching our specific text section
-    if (textSection) {
-        observer.observe(textSection);
-    }
+                    <p>
+                        Engineering teams often lose time translating technical intent into repeatable computational studies. galerkin focuses on shortening that path while preserving review, traceability, and expert control.
+                    </p>
 
-    // ==========================================
-    // 3. INDUSTRY SWITCHER LOGIC
-    // ==========================================
-    // A simple array of JavaScript objects acting as our "database" for the text content.
-    const industryData = [
-        {
-            title: "Automotive & Aerospace",
-            text: "Accelerating high-fidelity crash simulations and aerostructural optimisation routines. By applying reduced order modelling, we scale engineering cycles from days down to fractions of a second without sacrificing critical nonlinear accuracy metrics."
-        },
-        {
-            title: "Semiconductors & Electronics",
-            text: "Predictive micro-scale thermal simulation and physical stress mapping for high-density component arrays. Our machine learning pipelines ensure rapid hot-spot localisation before layout compilation."
-        },
-        {
-            title: "Renewable Energy Systems",
-            text: "Optimising material degradation pathways in advanced high-capacity battery architectures and offshore wind turbine structures. Physics-informed models offer accelerated lifecycle analysis for long-term deployments."
-        },
-        {
-            title: "Advanced Manufacturing",
-            text: "Real-time process control and parameter mapping for laser-sintering and additive manufacturing chains. We integrate structural integrity predictive filters directly onto the edge computing nodes."
-        }
-    ];
+                    <p>
+                        The platform is designed for exploratory research, early engineering evaluation, and structured technical reporting. It is not positioned as a replacement for domain expertise, certification, or independent validation.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-    // This function is called by the 'onclick' attribute in the HTML.
-    // 'index' determines which object to pull from the array above.
-    // 'element' is the specific HTML div that the user clicked.
-    function switchIndustry(index, element) {
-        
-        // Step A: Find every list item and remove the 'active' styling class
-        document.querySelectorAll('.industry-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        
-        // Step B: Add the 'active' styling class ONLY to the item just clicked
-        element.classList.add('active');
-        
-        // Step C: Update the HTML text on the right side using the data from our array
-        document.getElementById('details-title').innerText = industryData[index].title;
-        document.getElementById('details-text').innerText = industryData[index].text;
-    }
-</script>
+        <!-- # Products section. -->
+        <section id="products" aria-labelledby="products-title">
+            <div class="section-head">
+                <div class="eyebrow">Products</div>
 
-</body>
-</html>
+                <div>
+                    <h2 id="products-title">Our products.</h2>
+
+                    <div class="card-list">
+                        <article class="text-card">
+                            <h3>Computational Study Workspace</h3>
+                            <p>
+                                A secure environment for organising technical objectives, project data, computational study preparation, review materials, and final reporting.
+                            </p>
+                        </article>
+
+                        <article class="text-card">
+                            <h3>Simulation-Ready Study Package</h3>
+                            <p>
+                                A structured delivery for teams that need prepared computational study assets, documented assumptions, and review-ready technical outputs.
+                            </p>
+                        </article>
+
+                        <article class="text-card">
+                            <h3>Technical Reporting Layer</h3>
+                            <p>
+                                A reporting layer that converts computational study activity into readable summaries, traceable assumptions, observed results, and validation notes.
+                            </p>
+                        </article>
+
+                        <article class="text-card">
+                            <h3>Partner Workflow Environment</h3>
+                            <p>
+                                A scoped environment for organisations evaluating repeatable computational workflows, in

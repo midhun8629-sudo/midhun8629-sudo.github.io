@@ -104,11 +104,14 @@
         }
 
         /* # Small header logo using bracket-dot concept. */
+       /* # Header logo size adjusted for the wider bracket-dot mark. */
+     /* # Header logo size adjusted for the wider bracket-dot mark. */
         .brand-logo {
-            display: block;
-            width: 170px;
-            height: auto;
+           display: block;
+           width: 180px;
+           height: auto;
         }
+ 
 
         /* # Compact navigation. */
         nav {
@@ -505,25 +508,7 @@
         <div class="nav-wrap">
             <a href="/" class="brand" aria-label="galerkin home">
                 <!-- # Header logo: bracket + dot + galerkin wordmark. -->
-                <svg class="brand-logo" viewBox="0 0 390 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <!-- # Left bracket suggests a controlled computational environment. -->
-                    <path d="M36 18 H16 V62 H34"
-                          stroke="#00363a"
-                          stroke-width="4"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"/>
-
-                    <!-- # Dot suggests a projection point or engineering objective. -->
-                    <circle cx="28" cy="41" r="5" fill="#00363a"/>
-
-                    <!-- # galerkin wordmark. -->
-                    <text x="62" y="52"
-                          font-family="Inter, Helvetica, Arial, sans-serif"
-                          font-size="44"
-                          font-weight="800"
-                          letter-spacing="-1.8"
-                          fill="#181818">galerkin</text>
-                </svg>
+                Header logo:
             </a>
 
             <!-- # Navigation links point to sections on the same page. -->
@@ -545,25 +530,26 @@
                     <!-- # Large bracket-dot logo in the hero. -->
                     <div class="hero-brand">
                         <!-- # Hero logo: larger bracket + dot + galerkin wordmark. -->
-                        <svg class="hero-logo" viewBox="0 0 390 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="galerkin logo">
-                            <!-- # Left bracket suggests a controlled computational environment. -->
-                            <path d="M36 18 H16 V62 H34"
-                                  stroke="#00363a"
-                                  stroke-width="4"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"/>
+                         <!-- # Hero logo: larger square bracket mark + dot + galerkin wordmark. -->
+<svg class="hero-logo" viewBox="0 0 430 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="galerkin logo">
+    <!-- # Square bracket mark. -->
+    <path d="M54 26 H16 V78 H54"
+          stroke="#00363a"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
 
-                            <!-- # Dot suggests a projection point or engineering objective. -->
-                            <circle cx="28" cy="41" r="5" fill="#00363a"/>
+    <!-- # Dot placed inside or near the bracket. -->
+    <circle cx="52" cy="56" r="5" fill="#00363a"/>
 
-                            <!-- # galerkin wordmark. -->
-                            <text x="62" y="52"
-                                  font-family="Inter, Helvetica, Arial, sans-serif"
-                                  font-size="44"
-                                  font-weight="800"
-                                  letter-spacing="-1.8"
-                                  fill="#181818">galerkin</text>
-                        </svg>
+    <!-- # galerkin wordmark. -->
+    <text x="68" y="64"
+          font-family="Inter, Helvetica, Arial, sans-serif"
+          font-size="48"
+          font-weight="800"
+          letter-spacing="-2"
+          fill="#181818">galerkin</text>
+</svg>
                     </div>
 
                     <!-- # Main public positioning line. -->

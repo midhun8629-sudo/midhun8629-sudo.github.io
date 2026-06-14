@@ -317,6 +317,37 @@
             margin-bottom: 0;
         }
 
+        /* # Beta trial access link inside dark access cards. */
+        .access-trial-link {
+            display: inline-block;
+            margin-top: 1.15rem;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.72);
+        }
+
+        /* # Beta trial link hover state. */
+        .access-trial-link:hover {
+            color: #ffffff;
+            border-bottom-color: #ffffff;
+        }
+
+        /* # Small note for protected beta access. */
+        .access-note {
+            display: block;
+            margin-top: 0.65rem;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.72rem;
+            line-height: 1.45;
+            color: rgba(255, 255, 255, 0.68);
+        }
+
+
         /* # Process list with visible left rule. */
         .process {
             counter-reset: step;
@@ -585,7 +616,7 @@
 
                     <!-- # Quiet conversion link for controlled access. -->
                     <p class="hero-action">
-                        <a href="#contact">Request Access →</a>
+                        <a href="#access">Research Access →</a>
                     </p>
                 </div>
             </div>
@@ -708,8 +739,16 @@
                         <article class="access-card">
                             <h3>Research Access</h3>
                             <p>
-                                For academic groups, research teams, and early technical exploration involving focused studies and review-ready technical outputs.
+                                For academic groups, research teams, and early technical exploration involving focused studies, review-ready outputs, and beta access to the MOF diffusion workflow.
                             </p>
+
+                            <a class="access-trial-link" href="https://beta.galerkin.de/beta" target="_blank" rel="noopener">
+                                Open beta trial →
+                            </a>
+
+                            <span class="access-note">
+                                Research beta access is protected and intended for approved testers only.
+                            </span>
                         </article>
 
                         <article class="access-card">
